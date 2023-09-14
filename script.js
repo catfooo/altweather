@@ -29,26 +29,26 @@ const getSun = async () => {
 
         const sunrise = data.sys.sunrise;
         console.log("sunrise:", sunrise);
-        const sunriseDate = new Date(sunrise * 1000);
-        const sunriseTime = sunriseDate.toLocaleTimeString(undefined, {
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: false,
+        const sunriseTime = new Date(sunrise * 1000).toLocaleTimeString('en-US', {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
         });
-        console.log("Sunrise:", sunriseTime); 
-        const sunriseTimeText = "sunrise: " + data.sys.sunrise;
+        console.log("Sunrise:", sunriseTime);
+        const sunriseTimeText = "sunrise: " + sunriseTime;
         document.getElementById("sunrise").innerText = sunriseTimeText;
+
         const sunset = data.sys.sunset;
         console.log("sunset:", sunset);
-        const sunsetDate = new Date(sunset * 1000);
-        const sunsetTime = sunsetDate.toLocaleTimeString(undefined, {
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: false,
+        const sunsetTime = new Date(sunset * 1000).toLocaleTimeString('en-US', {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
         });
         console.log("Sunset:", sunsetTime);
-        const sunsetTimeText = "sunset: " + data.sys.sunset;
+        const sunsetTimeText = "sunset: " + sunsetTime;
         document.getElementById("sunset").innerText = sunsetTimeText;
+
 
     } catch {
         console.error("Could not get weather data");
