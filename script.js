@@ -109,8 +109,8 @@ const getWeek = async () => {
         // Create an array of weekday names
         const weekdayNames = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
 
-        // Reference to the weather-data div
-        const weatherDataDiv = document.getElementById("weather-data");
+        // Get the container element to display weather data
+        const weatherDataContainer = document.getElementById('weather-data');
 
         // Iterate through the data points
         for (const dataPoint of data.list) {
@@ -134,9 +134,17 @@ const getWeek = async () => {
 
                 // Check if it's a new weekday
                 if (weekday !== currentWeekday) {
-                    // Display the weekday name and temperatures in the weather-data div
-                    weatherDataDiv.innerHTML += `${weekday} (${temperatureGroup.join(', ')}°C)<br>`;
-                    
+                    // Create a new paragraph element to display the weekday and temperatures
+                    const paragraph = document.createElement('p');
+                    const textContent = `${weekday} (${temperatureGroup.join(', ')}°C)`;
+                    paragraph.textContent = textContent;
+
+                    // Append the paragraph to the weather data container
+                    weatherDataContainer.appendChild(paragraph);
+
+                    // Log the same information to the console
+                    console.log(textContent);
+
                     // Reset the current weekday and temperature group
                     currentWeekday = weekday;
                     temperatureGroup = [];
@@ -147,12 +155,20 @@ const getWeek = async () => {
             }
         }
 
-        // Display the last weekday and temperatures
-        weatherDataDiv.innerHTML += `${currentWeekday} (${temperatureGroup.join(', ')}°C)<br>`;
+        // Create a paragraph for the last weekday and temperatures
+        const paragraph = document.createElement('p');
+        const textContent = `${currentWeekday} (${temperatureGroup.join(', ')}°C)`;
+        paragraph.textContent = textContent;
+
+        // Append the paragraph to the weather data container
+        weatherDataContainer.appendChild(paragraph);
+
+        // Log the same information to the console
+        console.log(textContent);
     } catch {
         console.error("Could not get weather data");
     }
 }
 
-// Call the function to fetch and process weather data.
+// Call the function to fetch and display weather data in the browser and console
 getWeek();
