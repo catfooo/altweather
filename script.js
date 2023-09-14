@@ -113,8 +113,20 @@ const getWeek = async () => {
   
         // Check if the data point is for 3:00 (00:00 in 'dt_txt' means midnight)
         if (dataPoint.dt_txt.endsWith('03:00:00')) {
-          // Log the temperature value for 3:00
-          console.log(`Temperature at ${dataPoint.dt_txt}: ${temperature}°C`);
+          // Parse the date from the 'dt_txt' property
+          const dateParts = dataPoint.dt_txt.split(' ')[0].split('-');
+          const year = parseInt(dateParts[0]);
+          const month = parseInt(dateParts[1]) - 1; // Month is zero-based
+          const day = parseInt(dateParts[2]);
+  
+          // Create a Date object
+          const date = new Date(year, month, day);
+  
+          // Get the weekday name (e.g., Mon, Tue, etc.)
+          const weekday = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][date.getDay()];
+  
+          // Log the temperature and weekday
+          console.log(`Date: ${dataPoint.dt_txt}, Weekday: ${weekday}, Temperature: ${temperature}°C`);
         }
       }
     } catch {
