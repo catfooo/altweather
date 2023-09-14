@@ -96,3 +96,32 @@ getSun();
 // }
 
 // getWeek();
+
+const getWeek = async () => {
+    try {
+      const response = await fetch("https://api.openweathermap.org/data/2.5/forecast?q=Stockholm,Sweden&units=metric&APPID=966881349119fc14f6f3831c44ff9b53", { method: 'GET' });
+  
+      const data = await response.json();
+  
+      // Now you have the weather data in the 'data' variable.
+      console.log(data);
+  
+      // Iterate through the list of data points
+      for (const dataPoint of data.list) {
+        // Extract the temperature value from the data point
+        const temperature = dataPoint.main.temp;
+  
+        // Check if the data point is for 3:00 (00:00 in 'dt_txt' means midnight)
+        if (dataPoint.dt_txt.endsWith('03:00:00')) {
+          // Log the temperature value for 3:00
+          console.log(`Temperature at ${dataPoint.dt_txt}: ${temperature}°C`);
+        }
+      }
+    } catch {
+      console.error("Could not get weather data");
+    }
+  }
+  
+  // Call the function to fetch and display the weather data.
+  getWeek();
+  
