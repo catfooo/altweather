@@ -96,56 +96,63 @@ getSun();
 // }
 
 // getWeek();
-
 const getWeek = async () => {
     try {
-      const response = await fetch("https://api.openweathermap.org/data/2.5/forecast?q=Stockholm,Sweden&units=metric&APPID=966881349119fc14f6f3831c44ff9b53", { method: 'GET' });
-  
-      const data = await response.json();
-  
-      // Initialize variables to track the current weekday and temperature group
-      let currentWeekday = "";
-      let temperatureGroup = [];
-  
-      // Iterate through the data points
-      for (const dataPoint of data.list) {
-        // Extract and round temperature
-        const temperature = Math.round(dataPoint.main.temp);
-  
-        // Check if it's 3:00 AM data
-        if (dataPoint.dt_txt.endsWith('03:00:00')) {
-          // Parse the date and get the weekday name
-          const dateParts = dataPoint.dt_txt.split(' ')[0].split('-');
-          const year = parseInt(dateParts[0]);
-          const month = parseInt(dateParts[1]) - 1; // Months are 0-based.
-          const day = parseInt(dateParts[2]);
-  
-          // Create a Date object and determine the weekday name
-          const date = new Date(year, month, day);
-          const weekday = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'][date.getDay()];
-  
-          // Check if it's a new weekday
-          if (weekday !== currentWeekday) {
-            // Display the weekday name and temperatures
-            console.log(`${currentWeekday} (${temperatureGroup.join(', ')}°C)`);
-            
-            // Reset the current weekday and temperature group
-            currentWeekday = weekday;
-            temperatureGroup = [];
-          }
-  
-          // Add the temperature to the current group
-          temperatureGroup.push(temperature);
+        const response = await fetch("https://api.openweathermap.org/data/2.5/forecast?q=Stockholm,Sweden&units=metric&APPID=966881349119fc14f6f3831c44ff9b53", { method: 'GET' });
+
+        const data = await response.json();
+
+        // Initialize variables to track the current weekday and temperature group
+        let currentWeekday = "";
+        let temperatureGroup = [];
+
+        // Create an array of weekday names
+        const weekdayNames = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+
+        // Reference to the weather-data div
+        const weatherDataDiv = document.getElementById("weather-data");
+
+        // Iterate through the data points
+        for (const dataPoint of data.list) {
+            // Extract and round temperature
+            const temperature = Math.round(dataPoint.main.temp);
+
+            // Check if it's 3:00 AM data
+            if (dataPoint.dt_txt.endsWith('03:00:00')) {
+                // Parse the date and get the weekday index
+                const dateParts = dataPoint.dt_txt.split(' ')[0].split('-');
+                const year = parseInt(dateParts[0]);
+                const month = parseInt(dateParts[1]) - 1; // Months are 0-based.
+                const day = parseInt(dateParts[2]);
+
+                // Create a Date object and determine the weekday name
+                const date = new Date(year, month, day);
+                const weekdayIndex = date.getDay();
+
+                // Get the lowercase weekday name from the array
+                const weekday = weekdayNames[weekdayIndex];
+
+                // Check if it's a new weekday
+                if (weekday !== currentWeekday) {
+                    // Display the weekday name and temperatures in the weather-data div
+                    weatherDataDiv.innerHTML += `${weekday} (${temperatureGroup.join(', ')}°C)<br>`;
+                    
+                    // Reset the current weekday and temperature group
+                    currentWeekday = weekday;
+                    temperatureGroup = [];
+                }
+
+                // Add the temperature to the current group
+                temperatureGroup.push(temperature);
+            }
         }
-      }
-  
-      // Display the last weekday and temperatures
-      console.log(`${currentWeekday} (${temperatureGroup.join(', ')}°C)`);
+
+        // Display the last weekday and temperatures
+        weatherDataDiv.innerHTML += `${currentWeekday} (${temperatureGroup.join(', ')}°C)<br>`;
     } catch {
-      console.error("Could not get weather data");
+        console.error("Could not get weather data");
     }
-  }
-  
-  // Call the function to fetch and process weather data.
-  getWeek();
-  
+}
+
+// Call the function to fetch and process weather data.
+getWeek();
