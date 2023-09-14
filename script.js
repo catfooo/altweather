@@ -56,3 +56,43 @@ const getSun = async () => {
 }
 
 getSun();
+
+const getWeek = async () => {
+    try {
+        const response = await fetch("https://api.openweathermap.org/data/2.5/forecast?q=Stockholm,Sweden&units=metric&APPID=966881349119fc14f6f3831c44ff9b53", { method: 'GET' });
+
+        const data = await response.json();
+
+        console.log(data)
+
+        const mon = parseInt(data.list[0].main.temp);
+        console.log("mon:", mon);
+        const monText = "mon: " + mon;
+        document.getElementById("mon").innerText = monText;
+
+        const tue = parseInt(data.list[9].main.temp);
+        console.log("tue:", tue);
+        const tueText = "tue: " + tue;
+        document.getElementById("tue").innerText = tueText;
+
+        const wed = parseInt(data.list[19].main.temp);
+        console.log("wed:", wed);
+        const wedText = "wed: " + wed;
+        document.getElementById("wed").innerText = wedText;
+
+        const thu = parseInt(data.list[29].main.temp);
+        console.log("thu:", thu);
+        const thuText = "thu: " + thu;
+        document.getElementById("thu").innerText = thuText;
+
+        const fri = parseInt(data.list[39].main.temp);
+        console.log("fri:", fri);
+        const friText = "fri: " + fri;
+        document.getElementById("fri").innerText = friText;
+
+    } catch {
+        console.error("Could not get weather data");
+    }
+}
+
+getWeek();
