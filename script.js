@@ -20,3 +20,39 @@ const getWeather = async () => {
     }
 }
 getWeather();
+
+const getSun = async () => {
+    try {
+        const response = await fetch("https://api.openweathermap.org/data/2.5/weather?q=Stockholm,Sweden&units=metric&APPID=6cf9113cc039128887bea41cc4117942", { method: 'GET'});
+        const data = await response.json();
+        console.log(data)
+
+        const sunrise = data.sys.sunrise;
+        console.log("sunrise:", sunrise);
+        const sunriseDate = new Date(sunrise * 1000);
+        const sunriseTime = sunriseDate.toLocaleTimeString(undefined, {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+        });
+        console.log("Sunrise:", sunriseTime); 
+        const sunriseTimeText = "sunrise: " + data.sys.sunrise;
+        document.getElementById("sunrise").innerText = sunriseTimeText;
+        const sunset = data.sys.sunset;
+        console.log("sunset:", sunset);
+        const sunsetDate = new Date(sunset * 1000);
+        const sunsetTime = sunsetDate.toLocaleTimeString(undefined, {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+        });
+        console.log("Sunset:", sunsetTime);
+        const sunsetTimeText = "sunset: " + data.sys.sunset;
+        document.getElementById("sunset").innerText = sunsetTimeText;
+
+    } catch {
+        console.error("Could not get weather data");
+    }
+}
+
+getSun();
