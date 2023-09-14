@@ -103,37 +103,49 @@ const getWeek = async () => {
   
       const data = await response.json();
   
-      // Now you have the weather data in the 'data' variable.
-      console.log(data);
+      // Initialize variables to track the current weekday and temperature group
+      let currentWeekday = "";
+      let temperatureGroup = [];
   
-      // Iterate through the list of data points
+      // Iterate through the data points
       for (const dataPoint of data.list) {
-        // Extract the temperature value from the data point
-        const temperature = dataPoint.main.temp;
+        // Extract and round temperature
+        const temperature = Math.round(dataPoint.main.temp);
   
-        // Check if the data point is for 3:00 (00:00 in 'dt_txt' means midnight)
+        // Check if it's 3:00 AM data
         if (dataPoint.dt_txt.endsWith('03:00:00')) {
-          // Parse the date from the 'dt_txt' property
+          // Parse the date and get the weekday name
           const dateParts = dataPoint.dt_txt.split(' ')[0].split('-');
           const year = parseInt(dateParts[0]);
-          const month = parseInt(dateParts[1]) - 1; // Month is zero-based
+          const month = parseInt(dateParts[1]) - 1; // Months are 0-based.
           const day = parseInt(dateParts[2]);
   
-          // Create a Date object
+          // Create a Date object and determine the weekday name
           const date = new Date(year, month, day);
+          const weekday = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'][date.getDay()];
   
-          // Get the weekday name (e.g., Mon, Tue, etc.)
-          const weekday = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][date.getDay()];
+          // Check if it's a new weekday
+          if (weekday !== currentWeekday) {
+            // Display the weekday name and temperatures
+            console.log(`${currentWeekday} (${temperatureGroup.join(', ')}°C)`);
+            
+            // Reset the current weekday and temperature group
+            currentWeekday = weekday;
+            temperatureGroup = [];
+          }
   
-          // Log the temperature and weekday
-          console.log(`Date: ${dataPoint.dt_txt}, Weekday: ${weekday}, Temperature: ${temperature}°C`);
+          // Add the temperature to the current group
+          temperatureGroup.push(temperature);
         }
       }
+  
+      // Display the last weekday and temperatures
+      console.log(`${currentWeekday} (${temperatureGroup.join(', ')}°C)`);
     } catch {
       console.error("Could not get weather data");
     }
   }
   
-  // Call the function to fetch and display the weather data.
+  // Call the function to fetch and process weather data.
   getWeek();
   
