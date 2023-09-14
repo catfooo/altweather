@@ -10,7 +10,10 @@ const getWeather = async () => {
         const forecast = data.list[0];
 
         document.getElementById("city-name").innerText = data.city.name;
-        document.getElementById("temperature").innerText = forecast.main.temp;
+        // document.getElementById("temperature").innerText = forecast.main.temp;
+        const temperature = data.list[0].main.temp;
+        const temperatureNumber = parseInt(temperature);
+        document.getElementById("temperature").innerText = temperatureNumber;
         document.getElementById("weather").innerText = forecast.weather[0].main;
     } catch {
         console.error("Could not get weather data");
